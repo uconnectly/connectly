@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Connectly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: #22c55e;
+      font-weight: bold;
+    }
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>🚀 Connectly</h2>
+  <p>Creators helping creators grow</p>
+
+  <input id="username" placeholder="Your username">
+  <input id="niche" placeholder="Your niche (fitness, reels, etc)">
+  <button onclick="signup()">Join</button>
+
+  <button onclick="post()">Create Post</button>
+
+  <div class="card" id="result"></div>
+
+  <script>
+    async function signup() {
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          username: username.value,
+          niche: niche.value
+        })
+      });
+      document.getElementById("result").innerText = "Joined Connectly ✅";
+    }
+
+    async function post() {
+      const res = await fetch("/post", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          username: username.value
+        })
+      });
+      const data = await res.json();
+      document.getElementById("result").innerText =
+        `Posts: ${data.posts} | Badge: ${data.badge}`;
+    }
+  </script>
+</body>
+</html>
