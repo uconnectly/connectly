@@ -11,23 +11,22 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    # TEMP logic (Phase 1)
     if email and password:
-        return f"✅ Logged in as {email}"
-    else:
-        return "❌ Missing email or password", 400
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("home"))
 
 @app.route("/signup", methods=["POST"])
 def signup():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    # TEMP logic (Phase 1)
     if email and password:
-        return f"🎉 Account created for {email}"
-    else:
-        return "❌ Missing email or password", 400
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("home"))
 
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
