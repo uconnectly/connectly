@@ -2,96 +2,158 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Connectly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
       margin: 0;
-      height: 100vh;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #020617);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
+      color: #fff;
     }
 
     .card {
-      background: #020617;
-      padding: 40px;
-      border-radius: 16px;
+      background: rgba(0,0,0,0.6);
+      padding: 25px;
+      border-radius: 12px;
       width: 320px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       text-align: center;
     }
 
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #94a3b8;
-      font-size: 14px;
-      margin-bottom: 25px;
+    h2 {
+      margin-bottom: 15px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 8px;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
       border: none;
-      outline: none;
-      font-size: 14px;
     }
 
     button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
       border: none;
-      border-radius: 8px;
-      background: #22c55e;
-      color: #020617;
-      font-weight: bold;
+      background: #ff4d4d;
+      color: #fff;
+      font-size: 16px;
       cursor: pointer;
-      margin-bottom: 15px;
     }
 
     button:hover {
       opacity: 0.9;
     }
 
-    .divider {
-      margin: 20px 0;
-      font-size: 12px;
-      color: #64748b;
+    .hidden {
+      display: none;
+    }
+
+    .logout {
+      background: #ff4d4d;
+      margin-top: 15px;
     }
   </style>
 </head>
-
 <body>
 
-  <div class="card">
-    <h1>🚀 Connectly</h1>
-    <p>Your creator community platform</p>
+  <!-- AUTH CARD -->
+  <div class="card" id="auth-card">
+    <h2>Connectly</h2>
 
-    <!-- LOGIN -->
-    <form action="/login" method="POST">
-      <input type="email" name="email" placeholder="Login Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-    <div class="divider">OR</div>
-
-    <!-- SIGN UP -->
-    <form action="/signup" method="POST">
-      <input type="email" name="email" placeholder="Signup Email" required />
-      <input type="password" name="password" placeholder="Create Password" required />
-      <button type="submit">Sign Up</button>
-    </form>
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
   </div>
+
+  <!-- DASHBOARD -->
+  <div class="card hidden" id="dashboard">
+    <h2>🎉 Welcome to Connectly</h2>
+    <p>You are logged in successfully.</p>
+    <p>Profiles • Posts • Engagement coming next</p>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // 🔑 SUPABASE CONFIG (YOUR DETAILS)
+    const SUPABASE_URL = "https://pddbxmugaxzvfkrbkxaf.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc";
+
+    const supabase = supabasejs.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    const authCard = document.getElementById("auth-card");
+    const dashboard = document.getElementById("dashboard");
+
+    // SIGN UP
+    async function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      if (error) {
+        alert(error.message);
+      } else {
+        alert("Signup successful! Now login.");
+      }
+    }
+
+    // LOGIN
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        alert(error.message);
+      } else {
+        showDashboard();
+      }
+    }
+
+    // LOGOUT
+    async function logout() {
+      await supabase.auth.signOut();
+      dashboard.classList.add("hidden");
+      authCard.classList.remove("hidden");
+    }
+
+    function showDashboard() {
+      authCard.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+    }
+
+    // AUTO LOGIN CHECK
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        showDashboard();
+      }
+    });
+  </script>
 
 </body>
 </html>
