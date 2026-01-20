@@ -1,16 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JS Test</title>
+  <meta charset="UTF-8">
+  <title>Connectly Auth</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      background:#0f172a;
+      color:white;
+      font-family:Arial;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+    .box {
+      background:#020617;
+      padding:25px;
+      border-radius:10px;
+      width:300px;
+      text-align:center;
+    }
+    input, button {
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+      border-radius:5px;
+      border:none;
+    }
+    button {
+      background:#2563eb;
+      color:white;
+      cursor:pointer;
+    }
+  </style>
 </head>
 <body>
 
-<h1>JS TEST</h1>
-<button onclick="test()">Click me</button>
+<div class="box">
+  <h2>Connectly</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+</div>
 
 <script>
-  function test() {
-    alert("JavaScript is working ✅");
+  const supabase = supabaseJs.createClient(
+    "https://pddbxmugaxzvfkrbkxaf.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
+  );
+
+  async function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabase.auth.signUp({ email, password });
+
+    document.getElementById("msg").innerText =
+      error ? error.message : "Signup successful ✅ Check email if required";
+  }
+
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    document.getElementById("msg").innerText =
+      error ? error.message : "Login successful 🎉";
   }
 </script>
 
