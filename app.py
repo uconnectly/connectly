@@ -6,17 +6,28 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
-    if request.method == "POST":
-        return redirect(url_for("home"))
-    return render_template("login.html")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-@app.route("/signup", methods=["GET", "POST"])
+    # TEMP logic (Phase 1)
+    if email and password:
+        return f"✅ Logged in as {email}"
+    else:
+        return "❌ Missing email or password", 400
+
+@app.route("/signup", methods=["POST"])
 def signup():
-    if request.method == "POST":
-        return redirect(url_for("login"))
-    return render_template("signup.html")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    # TEMP logic (Phase 1)
+    if email and password:
+        return f"🎉 Account created for {email}"
+    else:
+        return "❌ Missing email or password", 400
+
 
 if __name__ == "__main__":
     app.run(debug=True)
