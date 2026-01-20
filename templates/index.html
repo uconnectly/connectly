@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Connectly</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -11,13 +11,13 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
+      font-family: Arial, sans-serif;
+      color: white;
     }
 
     .card {
@@ -26,10 +26,6 @@
       border-radius: 12px;
       width: 320px;
       text-align: center;
-    }
-
-    h2 {
-      margin-bottom: 15px;
     }
 
     input {
@@ -47,113 +43,78 @@
       border-radius: 6px;
       border: none;
       background: #ff4d4d;
-      color: #fff;
+      color: white;
       font-size: 16px;
       cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
     }
 
     .hidden {
       display: none;
     }
-
-    .logout {
-      background: #ff4d4d;
-      margin-top: 15px;
-    }
   </style>
 </head>
+
 <body>
 
-  <!-- AUTH CARD -->
-  <div class="card" id="auth-card">
-    <h2>Connectly</h2>
+<div class="card" id="auth">
+  <h2>Connectly</h2>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+</div>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+<div class="card hidden" id="dashboard">
+  <h2>🎉 Welcome</h2>
+  <p>You are logged in</p>
+  <button onclick="logout()">Logout</button>
+</div>
 
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="login()">Login</button>
-  </div>
+<script>
+  // ✅ CORRECT SUPABASE CLIENT
+  const supabase = window.supabase.createClient(
+    "https://pddbxmugaxzvfkrbkxaf.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
+  );
 
-  <!-- DASHBOARD -->
-  <div class="card hidden" id="dashboard">
-    <h2>🎉 Welcome to Connectly</h2>
-    <p>You are logged in successfully.</p>
-    <p>Profiles • Posts • Engagement coming next</p>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  const auth = document.getElementById("auth");
+  const dash = document.getElementById("dashboard");
 
-  <script>
-    // 🔑 SUPABASE CONFIG (YOUR DETAILS)
-    const SUPABASE_URL = "https://pddbxmugaxzvfkrbkxaf.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc";
+  async function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    const supabase = supabasejs.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    const { error } = await supabase.auth.signUp({ email, password });
 
-    const authCard = document.getElementById("auth-card");
-    const dashboard = document.getElementById("dashboard");
+    if (error) alert(error.message);
+    else alert("Signup successful. Now login.");
+  }
 
-    // SIGN UP
-    async function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signUp({
-        email,
-        password
-      });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Signup successful! Now login.");
-      }
-    }
+    if (error) alert(error.message);
+    else showDashboard();
+  }
 
-    // LOGIN
-    async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+  async function logout() {
+    await supabase.auth.signOut();
+    dash.classList.add("hidden");
+    auth.classList.remove("hidden");
+  }
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+  function showDashboard() {
+    auth.classList.add("hidden");
+    dash.classList.remove("hidden");
+  }
 
-      if (error) {
-        alert(error.message);
-      } else {
-        showDashboard();
-      }
-    }
-
-    // LOGOUT
-    async function logout() {
-      await supabase.auth.signOut();
-      dashboard.classList.add("hidden");
-      authCard.classList.remove("hidden");
-    }
-
-    function showDashboard() {
-      authCard.classList.add("hidden");
-      dashboard.classList.remove("hidden");
-    }
-
-    // AUTO LOGIN CHECK
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        showDashboard();
-      }
-    });
-  </script>
+  supabase.auth.getSession().then(({ data }) => {
+    if (data.session) showDashboard();
+  });
+</script>
 
 </body>
 </html>
