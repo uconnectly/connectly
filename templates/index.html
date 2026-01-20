@@ -1,119 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Connectly</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      color: white;
-    }
-
-    .card {
-      background: rgba(0,0,0,0.6);
-      padding: 25px;
-      border-radius: 12px;
-      width: 320px;
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: none;
-      background: #ff4d4d;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+  <title>JS Test</title>
 </head>
-
 <body>
 
-<div class="card" id="auth">
-  <h2>Connectly</h2>
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
-</div>
-
-<div class="card hidden" id="dashboard">
-  <h2>🎉 Welcome</h2>
-  <p>You are logged in</p>
-  <button onclick="logout()">Logout</button>
-</div>
+<h1>JS TEST</h1>
+<button onclick="test()">Click me</button>
 
 <script>
-  // ✅ CORRECT SUPABASE CLIENT
-  const supabase = window.supabase.createClient(
-    "https://pddbxmugaxzvfkrbkxaf.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
-  );
-
-  const auth = document.getElementById("auth");
-  const dash = document.getElementById("dashboard");
-
-  async function signup() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) alert(error.message);
-    else alert("Signup successful. Now login.");
+  function test() {
+    alert("JavaScript is working ✅");
   }
-
-  async function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) alert(error.message);
-    else showDashboard();
-  }
-
-  async function logout() {
-    await supabase.auth.signOut();
-    dash.classList.add("hidden");
-    auth.classList.remove("hidden");
-  }
-
-  function showDashboard() {
-    auth.classList.add("hidden");
-    dash.classList.remove("hidden");
-  }
-
-  supabase.auth.getSession().then(({ data }) => {
-    if (data.session) showDashboard();
-  });
 </script>
 
 </body>
