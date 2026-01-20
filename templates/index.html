@@ -1,32 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Connectly</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-        h1 {
-            font-size: 3rem;
-        }
-        p {
-            opacity: 0.8;
-        }
-    </style>
+  <title>Connectly</title>
+  <style>
+    body {
+      background: #0b1220;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #111827;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 320px;
+    }
+
+    a {
+      display: block;
+      margin: 12px 0;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    a.signup {
+      background: #22c55e;
+    }
+  </style>
 </head>
+
 <body>
-    <div>
-        <h1>🚀 Connectly</h1>
-        <p>Your creator community platform is LIVE</p>
-        <p>Next: Login • Profiles • Posts</p>
-    </div>
+  <div class="card">
+    <h1>🚀 Connectly</h1>
+    <p>Your creator community platform is LIVE</p>
+    <p><small>Next: Login • Profiles • Posts</small></p>
+
+    <a href="/login">Login</a>
+    <a href="/signup" class="signup">Sign Up</a>
+  </div>
 </body>
 </html>
