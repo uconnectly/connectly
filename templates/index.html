@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly Signup</title>
+  <title>Connectly</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Supabase CDN -->
@@ -12,30 +12,24 @@
     body {
       font-family: Arial, sans-serif;
       background: #0f172a;
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: white;
     }
-    .card {
+    .box {
       background: #020617;
-      padding: 30px;
-      width: 320px;
+      padding: 20px;
+      width: 300px;
       border-radius: 10px;
     }
     input, button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin-top: 10px;
-      border-radius: 6px;
+      border-radius: 5px;
       border: none;
-      font-size: 15px;
-    }
-    input {
-      background: #020617;
-      border: 1px solid #334155;
-      color: white;
     }
     button {
       background: #2563eb;
@@ -44,60 +38,66 @@
     }
   </style>
 </head>
-
 <body>
 
-  <div class="card">
-    <h2>🔐 Connectly</h2>
+  <div class="box">
+    <h2>Connectly</h2>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
 
-    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
   </div>
 
   <script>
-    // 🔴 REPLACE ONLY THE ANON KEY
-    const supabase = supabaseJs.createClient(
-      "https://uxcedmyivvtmcroqmtzi.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
+    // ✅ CREATE CLIENT ONCE
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
+
+    const supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
 
-    async function signUp() {
+    // ✅ SIGNUP FUNCTION (GLOBAL)
+    window.signup = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      if (!email || !password) {
-        alert("Fill all fields");
-        return;
-      }
-
-      // 1️⃣ AUTH SIGNUP
       const { data, error } = await supabase.auth.signUp({
         email,
-        password
+        password,
       });
 
       if (error) {
         alert(error.message);
-        return;
+        console.error(error);
+      } else {
+        alert("Signup successful 🎉 Check email if required");
+        console.log(data);
       }
+    };
 
-      // 2️⃣ INSERT INTO PROFILES TABLE (THIS WAS YOUR PROBLEM)
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: data.user.id,
-          email: data.user.email
-        });
+    // ✅ LOGIN FUNCTION (GLOBAL)
+    window.login = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      if (profileError) {
-        alert(profileError.message);
-        return;
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert(error.message);
+        console.error(error);
+      } else {
+        alert("Login successful ✅");
+        console.log(data);
       }
-
-      alert("Signup successful 🎉");
-    }
+    };
   </script>
 
 </body>
