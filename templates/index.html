@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connectly Auth</title>
 
-  <!-- Supabase CDN -->
+  <!-- Supabase CDN (LOAD ONLY ONCE) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #0f172a;
       color: white;
       display: flex;
@@ -21,84 +20,69 @@
     .box {
       background: #020617;
       padding: 20px;
+      border-radius: 8px;
       width: 300px;
-      border-radius: 10px;
     }
     input, button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      border-radius: 5px;
-      border: none;
     }
     button {
       background: #2563eb;
       color: white;
+      border: none;
       cursor: pointer;
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="box">
     <h2>Connectly</h2>
 
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
 
-    <button onclick="signup()">Sign Up</button>
-    <button onclick="login()">Login</button>
+    <button id="signupBtn">Sign Up</button>
+    <button id="loginBtn">Login</button>
   </div>
 
   <script>
-    // ✅ CREATE CLIENT ONCE
-    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
-
-    const supabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
+    // ✅ IMPORTANT: DO NOT NAME THIS `supabase`
+    const supabaseClient = supabase.createClient(
+      "https://uxcedmyivvtmcroqmtzi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
     );
 
-    // ✅ SIGNUP FUNCTION (GLOBAL)
-    window.signup = async function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: emailInput.value,
+        password: passwordInput.value,
       });
 
       if (error) {
         alert(error.message);
-        console.error(error);
       } else {
-        alert("Signup successful 🎉 Check email if required");
-        console.log(data);
+        alert("Signup successful! Check email.");
       }
-    };
+    });
 
-    // ✅ LOGIN FUNCTION (GLOBAL)
-    window.login = async function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: emailInput.value,
+        password: passwordInput.value,
       });
 
       if (error) {
         alert(error.message);
-        console.error(error);
       } else {
-        alert("Login successful ✅");
-        console.log(data);
+        alert("Login successful!");
       }
-    };
+    });
   </script>
-
 </body>
 </html>
