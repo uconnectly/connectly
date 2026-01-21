@@ -1,43 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Auth Test</title>
+  <title>Supabase Auth</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body>
+<body style="font-family: sans-serif; padding: 40px">
 
-  <h2>Supabase Login / Signup</h2>
+  <h2>Auth Test</h2>
 
-  <input type="email" id="email" placeholder="Enter email" />
-  <br /><br />
-
-  <input type="password" id="password" placeholder="Enter password" />
-  <br /><br />
+  <input id="email" type="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
 
   <button onclick="signup()">Sign Up</button>
   <button onclick="login()">Login</button>
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- ALL JS HERE -->
   <script>
-    const supabaseUrl = "https://uxcedmyivtmcroqmtzi.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
-
+    // ✅ CREATE SUPABASE CLIENT (ONLY ONCE)
     const supabase = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
+      "https://uxcedmyiwtmcroqmtzi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
     );
 
+    // ✅ SIGNUP FUNCTION
     async function signup() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password
       });
 
       if (error) {
@@ -48,19 +40,20 @@
       }
     }
 
+    // ✅ LOGIN FUNCTION
     async function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
       if (error) {
         alert(error.message);
       } else {
-        alert("Login successful 🎉");
+        alert("Login successful ✅");
         console.log(data);
       }
     }
