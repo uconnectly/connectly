@@ -50,19 +50,21 @@
   </div>
 
   <script>
-    // ✅ SUPABASE INIT
-    const supabaseUrl = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-    const supabaseKey =
+    // ✅ USE DIFFERENT VARIABLE NAME
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    const supabase = supabaseJs.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabaseJs.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-    // ✅ LOGIN FUNCTION
     async function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
       });
@@ -75,12 +77,11 @@
       }
     }
 
-    // ✅ SIGN UP FUNCTION
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabaseClient.auth.signUp({
         email,
         password,
       });
