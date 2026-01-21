@@ -2,87 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly Auth</title>
-
-  <!-- Supabase CDN (LOAD ONLY ONCE) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: #020617;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+  <title>Auth Test</title>
 </head>
 
 <body>
-  <div class="box">
-    <h2>Connectly</h2>
 
-    <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Password" />
+  <h2>Supabase Login / Signup</h2>
 
-    <button id="signupBtn">Sign Up</button>
-    <button id="loginBtn">Login</button>
-  </div>
+  <input type="email" id="email" placeholder="Enter email" />
+  <br /><br />
 
+  <input type="password" id="password" placeholder="Enter password" />
+  <br /><br />
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ALL JS HERE -->
   <script>
-    // ✅ IMPORTANT: DO NOT NAME THIS `supabase`
-    const supabaseClient = supabase.createClient(
-      "https://uxcedmyivvtmcroqmtzi.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
+    const supabaseUrl = "https://uxcedmyivtmcroqmtzi.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
+
+    const supabase = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
     );
 
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
+    async function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    document.getElementById("signupBtn").addEventListener("click", async () => {
-      const { data, error } = await supabaseClient.auth.signUp({
-        email: emailInput.value,
-        password: passwordInput.value,
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
       });
 
       if (error) {
         alert(error.message);
       } else {
-        alert("Signup successful! Check email.");
+        alert("Signup successful ✅");
+        console.log(data);
       }
-    });
+    }
 
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: emailInput.value,
-        password: passwordInput.value,
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) {
         alert(error.message);
       } else {
-        alert("Login successful!");
+        alert("Login successful 🎉");
+        console.log(data);
       }
-    });
+    }
   </script>
+
 </body>
 </html>
