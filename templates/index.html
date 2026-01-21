@@ -2,64 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly</title>
-
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Connectly – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0;
       height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: Arial, sans-serif;
+      color: white;
     }
-    .box {
-      background: #020617;
+
+    .card {
+      background: #111;
       padding: 30px;
-      border-radius: 10px;
-      width: 300px;
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
     }
-    input, button {
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
       width: 100%;
-      margin-top: 10px;
       padding: 10px;
+      margin-bottom: 12px;
       border-radius: 6px;
       border: none;
+      outline: none;
     }
+
     button {
-      background: #6366f1;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
       color: white;
+      font-size: 16px;
       cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e40af;
     }
   </style>
 </head>
 
 <body>
-  <div class="box">
-    <h2>Connectly</h2>
 
-    <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Password" />
+  <div class="card">
+    <h2>🔐 Connectly</h2>
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
     <button onclick="login()">Login</button>
     <button onclick="signUp()">Sign Up</button>
   </div>
 
+  <!-- ✅ SUPABASE CDN (MUST BE BEFORE SCRIPT) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    // ✅ USE DIFFERENT VARIABLE NAME
+    // 🔑 SUPABASE CONFIG
     const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
     const SUPABASE_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    const supabaseClient = supabaseJs.createClient(
+    // ✅ CORRECT CLIENT (NO supabaseJs)
+    const supabaseClient = supabase.createClient(
       SUPABASE_URL,
       SUPABASE_KEY
     );
 
+    // ✅ LOGIN FUNCTION
     async function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -77,6 +102,7 @@
       }
     }
 
+    // ✅ SIGNUP FUNCTION
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -89,9 +115,10 @@
       if (error) {
         alert(error.message);
       } else {
-        alert("Signup successful 🎉 Now login");
+        alert("Signup successful 🎉 Check email if confirmation is on.");
       }
     }
   </script>
+
 </body>
 </html>
