@@ -1,80 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Connectly Auth</title>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8" />
+  <title>Connectly</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
-      background:#0f172a;
-      color:white;
-      font-family:Arial;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
     }
-    .box {
-      background:#020617;
-      padding:25px;
-      border-radius:10px;
-      width:300px;
-      text-align:center;
+    .card {
+      background: #020617;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
     }
     input, button {
-      width:100%;
-      margin-top:10px;
-      padding:10px;
-      border-radius:5px;
-      border:none;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
     }
     button {
-      background:#2563eb;
-      color:white;
-      cursor:pointer;
+      background: #ef4444;
+      color: white;
+      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
+  <div class="card">
+    <h2>🔥 Connectly</h2>
 
-<div class="box">
-  <h2>Connectly</h2>
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
 
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signIn()">Login</button>
 
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
+    <p id="msg"></p>
+  </div>
 
-  <p id="msg"></p>
-</div>
+  <script>
+    const supabase = supabasejs.createClient(
+      "https://pddbxmugaxzvfkrbkxaf.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
+    );
 
-<script>
-  const supabase = supabaseJs.createClient(
-    "https://pddbxmugaxzvfkrbkxaf.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
-  );
+    async function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-  async function signup() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      document.getElementById("msg").innerText =
+        error ? error.message : "Signup successful!";
+    }
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    async function signIn() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    document.getElementById("msg").innerText =
-      error ? error.message : "Signup successful ✅ Check email if required";
-  }
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-  async function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    document.getElementById("msg").innerText =
-      error ? error.message : "Login successful 🎉";
-  }
-</script>
-
+      document.getElementById("msg").innerText =
+        error ? error.message : "Logged in successfully!";
+    }
+  </script>
 </body>
 </html>
