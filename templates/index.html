@@ -2,80 +2,146 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Connectly Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: Arial, sans-serif;
+      color: white;
     }
+
     .card {
-      background: #020617;
+      background: #111827;
       padding: 30px;
-      border-radius: 10px;
-      width: 300px;
+      border-radius: 12px;
+      width: 320px;
       text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
-    input, button {
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
+      margin-bottom: 12px;
       border-radius: 6px;
       border: none;
+      outline: none;
     }
+
     button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .signup {
+      background: #22c55e;
+      color: black;
+    }
+
+    .login {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .logout {
       background: #ef4444;
       color: white;
-      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <h2>🔥 Connectly</h2>
+
+  <!-- AUTH CARD -->
+  <div class="card" id="authCard">
+    <h2>🔐 Connectly</h2>
 
     <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Password" />
+    <input id="password" type="password" placeholder="Password (6+ chars)" />
 
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="signIn()">Login</button>
-
-    <p id="msg"></p>
+    <button class="signup" onclick="signUp()">Sign Up</button>
+    <button class="login" onclick="login()">Login</button>
   </div>
 
+  <!-- DASHBOARD -->
+  <div class="card hidden" id="dashboard">
+    <h2>🎉 Welcome to Connectly</h2>
+    <p>You are logged in successfully.</p>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- SUPABASE CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+
+  <!-- SUPABASE CONFIG -->
   <script>
-    const supabase = supabasejs.createClient(
+    const supabaseClient = supabase.createClient(
       "https://pddbxmugaxzvfkrbkxaf.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
     );
+
+    const authCard = document.getElementById("authCard");
+    const dashboard = document.getElementById("dashboard");
 
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signUp({ email, password });
-      document.getElementById("msg").innerText =
-        error ? error.message : "Signup successful!";
-    }
-
-    async function signIn() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabaseClient.auth.signUp({
         email,
         password,
       });
 
-      document.getElementById("msg").innerText =
-        error ? error.message : "Logged in successfully!";
+      if (error) {
+        alert(error.message);
+      } else {
+        alert("Signup successful 🎉 Now login");
+      }
+    }
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert(error.message);
+      } else {
+        authCard.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+      }
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+      dashboard.classList.add("hidden");
+      authCard.classList.remove("hidden");
     }
   </script>
+
 </body>
 </html>
