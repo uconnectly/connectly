@@ -2,57 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly – Login</title>
+  <title>Connectly Signup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       font-family: Arial, sans-serif;
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       color: white;
     }
-
     .card {
-      background: #111;
+      background: #020617;
       padding: 30px;
-      border-radius: 12px;
       width: 320px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      text-align: center;
+      border-radius: 10px;
     }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-    }
-
-    button {
+    input, button {
       width: 100%;
       padding: 12px;
       margin-top: 10px;
-      border: none;
       border-radius: 6px;
+      border: none;
+      font-size: 15px;
+    }
+    input {
+      background: #020617;
+      border: 1px solid #334155;
+      color: white;
+    }
+    button {
       background: #2563eb;
       color: white;
-      font-size: 16px;
       cursor: pointer;
-    }
-
-    button:hover {
-      background: #1e40af;
     }
   </style>
 </head>
@@ -65,58 +53,50 @@
     <input type="email" id="email" placeholder="Email" />
     <input type="password" id="password" placeholder="Password" />
 
-    <button onclick="login()">Login</button>
     <button onclick="signUp()">Sign Up</button>
   </div>
 
-  <!-- ✅ SUPABASE CDN (MUST BE BEFORE SCRIPT) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    // 🔑 SUPABASE CONFIG
-    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-    const SUPABASE_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
-
-    // ✅ CORRECT CLIENT (NO supabaseJs)
-    const supabaseClient = supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
+    // 🔴 REPLACE ONLY THE ANON KEY
+    const supabase = supabaseJs.createClient(
+      "https://uxcedmyivvtmcroqmtzi.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
     );
 
-    // ✅ LOGIN FUNCTION
-    async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      const { error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Login successful 🎉");
-        window.location.href = "/dashboard";
-      }
-    }
-
-    // ✅ SIGNUP FUNCTION
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabaseClient.auth.signUp({
+      if (!email || !password) {
+        alert("Fill all fields");
+        return;
+      }
+
+      // 1️⃣ AUTH SIGNUP
+      const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password
       });
 
       if (error) {
         alert(error.message);
-      } else {
-        alert("Signup successful 🎉 Check email if confirmation is on.");
+        return;
       }
+
+      // 2️⃣ INSERT INTO PROFILES TABLE (THIS WAS YOUR PROBLEM)
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: data.user.id,
+          email: data.user.email
+        });
+
+      if (profileError) {
+        alert(profileError.message);
+        return;
+      }
+
+      alert("Signup successful 🎉");
     }
   </script>
 
