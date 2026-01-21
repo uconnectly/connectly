@@ -1,82 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Connectly Supabase Test</title>
+  <meta charset="UTF-8" />
+  <title>Connectly Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      background:#0f172a;
-      color:white;
-      font-family:Arial;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .box {
-      background:#020617;
-      padding:30px;
-      border-radius:12px;
-      width:300px;
-      text-align:center;
+      background: #020617;
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
     }
-    input,button {
-      width:100%;
-      padding:10px;
-      margin-top:10px;
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    .msg {
+      margin-top: 10px;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>Connectly Auth Test</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
-</div>
+  <div class="box">
+    <h2>🔐 Connectly</h2>
 
-<script>
-  alert("JS LOADED");
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-  const supabase = window.supabase.createClient(
-    "https://uxcedmyivvtmcroqmtzi.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo"
-  );
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
 
-  async function signup() {
-    alert("Signup clicked");
+    <div class="msg" id="message"></div>
+  </div>
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+  <script>
+    // ✅ YOUR SUPABASE CONFIG
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
+    const supabase = supabaseJs.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-    alert(error ? error.message : "Signup success!");
-  }
+    const msg = document.getElementById("message");
 
-  async function login() {
-    alert("Login clicked");
+    async function signUp() {
+      msg.innerText = "Signing up...";
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password
+      });
 
-    alert(error ? error.message : "Login success!");
-  }
-</script>
+      if (error) {
+        msg.innerText = "❌ " + error.message;
+      } else {
+        msg.innerText = "✅ Signup successful! Check email.";
+      }
+    }
+
+    async function login() {
+      msg.innerText = "Logging in...";
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        msg.innerText = "❌ " + error.message;
+      } else {
+        msg.innerText = "✅ Login successful!";
+      }
+    }
+  </script>
 
 </body>
 </html>
