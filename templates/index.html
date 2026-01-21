@@ -3,60 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>Connectly Auth</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Supabase CDN (REQUIRED) -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: Arial, sans-serif;
+      background: #0f172a;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
+      height: 100vh;
+      color: white;
     }
-
     .card {
-      background: #111;
-      padding: 30px;
+      background: #020617;
+      padding: 24px;
       border-radius: 12px;
       width: 320px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      color: white;
-      text-align: center;
     }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    input {
+    input, button {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin-top: 10px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
-      font-size: 16px;
-      cursor: pointer;
+    }
+    button {
       background: #2563eb;
       color: white;
+      cursor: pointer;
     }
-
     button:hover {
-      background: #1e4ed8;
+      background: #1d4ed8;
+    }
+    #msg {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #fca5a5;
     }
   </style>
 </head>
@@ -65,54 +51,51 @@
   <div class="card">
     <h2>🔐 Connectly</h2>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
 
-    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signup()">Sign Up</button>
     <button onclick="login()">Login</button>
+
+    <div id="msg"></div>
   </div>
 
   <script>
-    // 🔴 STEP 1: REPLACE THESE TWO VALUES
-    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-    const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
+    // 🔴 REPLACE THESE TWO VALUES ONLY
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    // 🔴 DO NOT TOUCH BELOW THIS
-    const supabaseClient = supabase.createClient(
+    const supabase = supabase.createClient(
       SUPABASE_URL,
       SUPABASE_ANON_KEY
     );
 
-    async function signUp() {
+    const msg = document.getElementById("msg");
+
+    async function signup() {
+      msg.innerText = "Signing up...";
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabaseClient.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Signup successful! Check Supabase → Auth → Users");
-      }
+      msg.innerText = error ? error.message : "✅ Signup successful!";
     }
 
     async function login() {
+      msg.innerText = "Logging in...";
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabaseClient.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        alert(error.message);
-      } else {
-        alert("Login successful 🎉");
-      }
+      msg.innerText = error ? error.message : "✅ Login successful!";
     }
   </script>
 </body>
