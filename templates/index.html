@@ -5,24 +5,28 @@
   <title>Connectly Auth</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Supabase CDN (REQUIRED) -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <style>
     body {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      margin: 0;
       height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       font-family: Arial, sans-serif;
-      color: white;
     }
 
     .card {
-      background: #111827;
+      background: #111;
       padding: 30px;
       border-radius: 12px;
       width: 320px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      color: white;
       text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     h2 {
@@ -31,77 +35,53 @@
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
       outline: none;
+      font-size: 16px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
       border: none;
+      font-size: 16px;
       cursor: pointer;
-      font-weight: bold;
-    }
-
-    .signup {
-      background: #22c55e;
-      color: black;
-    }
-
-    .login {
-      background: #3b82f6;
+      background: #2563eb;
       color: white;
     }
 
-    .logout {
-      background: #ef4444;
-      color: white;
-      margin-top: 15px;
-    }
-
-    .hidden {
-      display: none;
+    button:hover {
+      background: #1e4ed8;
     }
   </style>
 </head>
 
 <body>
-
-  <!-- AUTH CARD -->
-  <div class="card" id="authCard">
+  <div class="card">
     <h2>🔐 Connectly</h2>
 
-    <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Password (6+ chars)" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-    <button class="signup" onclick="signUp()">Sign Up</button>
-    <button class="login" onclick="login()">Login</button>
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="card hidden" id="dashboard">
-    <h2>🎉 Welcome to Connectly</h2>
-    <p>You are logged in successfully.</p>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
-
-  <!-- SUPABASE CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
-
-  <!-- SUPABASE CONFIG -->
   <script>
-    const supabaseClient = supabase.createClient(
-      "https://pddbxmugaxzvfkrbkxaf.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkZGJ4bXVnYXh6dmZrcmJreGFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MTk4OTUsImV4cCI6MjA4NDQ5NTg5NX0.uFQb6mnGT5IJt02q4vAfgW1gFlyxFy3Vspoj7H7tgTc"
-    );
+    // 🔴 STEP 1: REPLACE THESE TWO VALUES
+    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
 
-    const authCard = document.getElementById("authCard");
-    const dashboard = document.getElementById("dashboard");
+    // 🔴 DO NOT TOUCH BELOW THIS
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
     async function signUp() {
       const email = document.getElementById("email").value;
@@ -115,7 +95,7 @@
       if (error) {
         alert(error.message);
       } else {
-        alert("Signup successful 🎉 Now login");
+        alert("Signup successful! Check Supabase → Auth → Users");
       }
     }
 
@@ -131,17 +111,9 @@
       if (error) {
         alert(error.message);
       } else {
-        authCard.classList.add("hidden");
-        dashboard.classList.remove("hidden");
+        alert("Login successful 🎉");
       }
     }
-
-    async function logout() {
-      await supabaseClient.auth.signOut();
-      dashboard.classList.add("hidden");
-      authCard.classList.remove("hidden");
-    }
   </script>
-
 </body>
 </html>
