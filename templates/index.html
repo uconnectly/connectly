@@ -5,73 +5,92 @@
   <title>Auth</title>
 
   <!-- Supabase CDN (ONLY ONCE) -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-</head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    input {
+      display: block;
+      margin-bottom: 10px;
+      padding: 6px;
+      width: 250px;
+    }
+    button {
+      padding: 6px 12px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
 <body>
+
   <h2>Auth</h2>
 
   <input id="email" type="email" placeholder="Email" />
-  <br /><br />
   <input id="password" type="password" placeholder="Password" />
-  <br /><br />
 
-  <button onclick="signUp()">Sign Up</button>
-  <button onclick="login()">Login</button>
+  <button id="signupBtn">Sign Up</button>
+  <button id="loginBtn">Login</button>
 
-  <p id="message"></p>
+  <div id="msg"></div>
 
   <script>
-    // 🔥 STEP 1: INIT SUPABASE (ONLY HERE)
-    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
+    // 🔹 Supabase config (DO NOT duplicate this anywhere)
+    const supabaseUrl = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    const supabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // 🔥 STEP 2: SIGN UP
-    async function signUp() {
+    const msg = document.getElementById("msg");
+
+    // ✅ SIGN UP
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      msg.textContent = "Signing up...";
+
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       const { error } = await supabase.auth.signUp({
         email,
-        password,
+        password
       });
 
       if (error) {
-        document.getElementById("message").innerText = error.message;
+        msg.textContent = "❌ " + error.message;
       } else {
-        document.getElementById("message").innerText = "Signup success 🎉";
-        // 👉 Redirect after signup
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 1000);
+        msg.textContent = "✅ Signup success 🎉";
       }
-    }
+    });
 
-    // 🔥 STEP 3: LOGIN
-    async function login() {
+    // ✅ LOGIN
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      msg.textContent = "Logging in...";
+
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
 
       if (error) {
-        document.getElementById("message").innerText = error.message;
+        msg.textContent = "❌ " + error.message;
       } else {
-        document.getElementById("message").innerText = "Login success ✅";
-        // 👉 Redirect after login
+        msg.textContent = "✅ Login success 🎉 Redirecting...";
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 1000);
       }
-    }
+    });
   </script>
+
 </body>
 </html>
