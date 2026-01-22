@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Auth Test</title>
+  <title>Supabase Auth</title>
 </head>
 <body>
 
@@ -16,49 +16,40 @@
 
 <p id="msg"></p>
 
-<!-- ✅ ONLY ONE SUPABASE SCRIPT -->
+<!-- ✅ SUPABASE CDN (ONLY ONCE) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  // ❌ DO NOT redeclare this anywhere else
-  const supabaseUrl = "https://YOUR_PROJECT_ID.supabase.co";
-  const supabaseKey = "YOUR_ANON_KEY";
+  // ✅ REAL DETAILS (NO PLACEHOLDERS)
+  const supabaseUrl = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
   const supabaseClient = supabase.createClient(
     supabaseUrl,
     supabaseKey
   );
 
-  async function signup() {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    const { error } = await supabaseClient.auth.signUp({
-      email,
-      password
-    });
-
-    msg.innerText = error ? error.message : "Signup success 🎉";
-  }
-
-  async function login() {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    msg.innerText = error ? error.message : "Login success ✅";
-  }
-
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const msg = document.getElementById("msg");
 
-  document.getElementById("signupBtn").onclick = signup;
-  document.getElementById("loginBtn").onclick = login;
+  document.getElementById("signupBtn").onclick = async () => {
+    const { error } = await supabaseClient.auth.signUp({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+
+    msg.innerText = error ? error.message : "Signup success 🎉";
+  };
+
+  document.getElementById("loginBtn").onclick = async () => {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+
+    msg.innerText = error ? error.message : "Login success ✅";
+  };
 </script>
 
 </body>
