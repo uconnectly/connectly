@@ -2,59 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Auth Test</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auth</title>
 
-  <!-- Supabase CDN (ONLY ONCE) -->
+  <!-- Supabase v2 -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin: 6px 0;
-    }
-    button {
-      width: 100%;
-      padding: 8px;
-      margin-top: 8px;
-      cursor: pointer;
-    }
-  </style>
 </head>
 
 <body>
-  <div class="box">
-    <h3>Supabase Auth</h3>
+  <h2>Auth</h2>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+  <input
+    type="email"
+    id="email"
+    placeholder="Email"
+  /><br /><br />
 
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="login()">Login</button>
-  </div>
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+  /><br /><br />
+
+  <button onclick="signUp()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
 
   <script>
-    // 🔴 REPLACE THESE TWO VALUES ONLY
+    // 🔴 PUT YOUR REAL VALUES HERE
     const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    // ✅ IMPORTANT: DO NOT NAME THIS `supabase`
-    const sb = window.supabase.createClient(
+    // ✅ Create client ONCE
+    const sb = supabase.createClient(
       SUPABASE_URL,
       SUPABASE_ANON_KEY
     );
@@ -63,17 +43,16 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await sb.auth.signUp({
+      const { error } = await sb.auth.signUp({
         email,
-        password
+        password,
       });
 
       if (error) {
-        alert(error.message);
-        console.error(error);
+        document.getElementById("msg").innerText = error.message;
       } else {
-        alert("Signup successful ✅");
-        console.log(data);
+        document.getElementById("msg").innerText =
+          "Signup successful ✅ Now login";
       }
     }
 
@@ -81,17 +60,17 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await sb.auth.signInWithPassword({
-        email,
-        password
-      });
+      const { data, error } =
+        await sb.auth.signInWithPassword({
+          email,
+          password,
+        });
 
       if (error) {
-        alert(error.message);
-        console.error(error);
+        document.getElementById("msg").innerText = error.message;
       } else {
-        alert("Login successful ✅");
-        console.log(data);
+        // ✅ REDIRECT
+        window.location.href = "dashboard.html";
       }
     }
   </script>
