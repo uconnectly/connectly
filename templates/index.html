@@ -2,54 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connectly Auth</title>
+  <title>Supabase Auth Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Supabase CDN (ONLY ONCE) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 50px;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
     }
     input {
-      display: block;
-      margin-bottom: 10px;
+      width: 100%;
       padding: 8px;
-      width: 250px;
+      margin: 6px 0;
     }
     button {
-      padding: 8px 16px;
-      margin-right: 10px;
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
       cursor: pointer;
     }
   </style>
 </head>
+
 <body>
+  <div class="box">
+    <h3>Supabase Auth</h3>
 
-  <h2>Login / Signup</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-  <input id="email" type="email" placeholder="Email" />
-  <input id="password" type="password" placeholder="Password" />
-
-  <button onclick="signUp()">Sign Up</button>
-  <button onclick="login()">Login</button>
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </div>
 
   <script>
-    /* 🔴 PASTE YOUR DATA HERE */
-    const supabaseUrl = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
+    // 🔴 REPLACE THESE TWO VALUES ONLY
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-    const supabase = window.supabase.createClient(
-      supabaseUrl,
-      supabaseKey
+    // ✅ IMPORTANT: DO NOT NAME THIS `supabase`
+    const sb = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
 
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email,
         password
       });
@@ -58,7 +72,7 @@
         alert(error.message);
         console.error(error);
       } else {
-        alert("Signup successful ✅ Check Supabase Users");
+        alert("Signup successful ✅");
         console.log(data);
       }
     }
@@ -67,7 +81,7 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await sb.auth.signInWithPassword({
         email,
         password
       });
@@ -81,6 +95,5 @@
       }
     }
   </script>
-
 </body>
 </html>
