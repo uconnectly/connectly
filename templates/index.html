@@ -1,56 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Supabase Auth</title>
+  <meta charset="UTF-8" />
+  <title>Auth</title>
+
+  <!-- Supabase CDN (ONLY ONCE) -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
+  <h2>Auth</h2>
 
-<h2>Auth</h2>
+  <input id="email" type="email" placeholder="Email" />
+  <br /><br />
+  <input id="password" type="password" placeholder="Password" />
+  <br /><br />
 
-<input id="email" type="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="signUp()">Sign Up</button>
+  <button onclick="login()">Login</button>
 
-<button id="signupBtn">Sign Up</button>
-<button id="loginBtn">Login</button>
+  <p id="message"></p>
 
-<p id="msg"></p>
+  <script>
+    // 🔥 STEP 1: INIT SUPABASE (ONLY HERE)
+    const SUPABASE_URL = "https://uxcedmyivvtmcroqmtzi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
 
-<!-- ✅ SUPABASE CDN (ONLY ONCE) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    const supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-<script>
-  // ✅ REAL DETAILS (NO PLACEHOLDERS)
-  const supabaseUrl = "https://uxcedmyivvtmcroqmtzi.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4Y2VkbXlpdnZ0bWNyb3FtdHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5ODUyMjAsImV4cCI6MjA4NDU2MTIyMH0.U-fDqvGybMxJsbjjjn35O5yNqdUVTPHW_ldoYwKLKMo";
+    // 🔥 STEP 2: SIGN UP
+    async function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-  const supabaseClient = supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const msg = document.getElementById("msg");
+      if (error) {
+        document.getElementById("message").innerText = error.message;
+      } else {
+        document.getElementById("message").innerText = "Signup success 🎉";
+        // 👉 Redirect after signup
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1000);
+      }
+    }
 
-  document.getElementById("signupBtn").onclick = async () => {
-    const { error } = await supabaseClient.auth.signUp({
-      email: emailInput.value,
-      password: passwordInput.value
-    });
+    // 🔥 STEP 3: LOGIN
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    msg.innerText = error ? error.message : "Signup success 🎉";
-  };
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-  document.getElementById("loginBtn").onclick = async () => {
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email: emailInput.value,
-      password: passwordInput.value
-    });
-
-    msg.innerText = error ? error.message : "Login success ✅";
-  };
-</script>
-
+      if (error) {
+        document.getElementById("message").innerText = error.message;
+      } else {
+        document.getElementById("message").innerText = "Login success ✅";
+        // 👉 Redirect after login
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1000);
+      }
+    }
+  </script>
 </body>
 </html>
